@@ -26,6 +26,9 @@ FLUSIGHT_INTERVAL_INDICES = [
     for alpha in FLUSIGHT_ALPHAS
 ]
 
+def calc_rmse(y_pred: np.ndarray, y_true: np.ndarray) -> float:
+    return float(np.sqrt(np.mean((y_pred - y_true) ** 2)))
+
 
 def calc_flusight_quantiles(y, y_pred) -> np.ndarray:
     # make sure y and y_pred are log scaled
@@ -35,7 +38,7 @@ def calc_flusight_quantiles(y, y_pred) -> np.ndarray:
     return np.quantile(residuals_raw, FLUSIGHT_QUANTILES)
 
 
-def calc_weighted_internal_score(y, quantile_preds) -> np.ndarray:
+def calc_weighted_interval_score(y, quantile_preds) -> np.ndarray:
     median_pred = quantile_preds[:, FLUSIGHT_MEDIAN_IDX]
     N = y.shape[0]
     scores = np.zeros(N)
@@ -48,8 +51,8 @@ def calc_weighted_internal_score(y, quantile_preds) -> np.ndarray:
         under_penalty = (2 / alpha) * np.maximum(lower - y, 0)
         over_penalty = (2 / alpha) * np.maximum(y - upper, 0)
 
-        interval_score = sharpness + under_penalty + over_penalty
-        interval_score_sum += (alpha / 2) * interval_score
+        scores = sharpness + under_penalty + over_penalty
+        scores_sum += (alpha / 2) * scores
 
-    wis = (1 / (_K + 0.5)) * (0.5 * np.abs(y - median_pred) + interval_score_sum)
+    wis = (1 / (FLUSIGHT_K + 0.5)) * (0.5 * np.abs(y - median_pred) + scores_sum)
     return wis

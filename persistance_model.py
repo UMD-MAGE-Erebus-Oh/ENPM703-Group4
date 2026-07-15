@@ -6,6 +6,7 @@ NO training
 
 import numpy as np
 from data_utils import FEATURE_COLUMNS, get_full_flu_dataset
+from eval_utils import calc_rmse
 
 class PersistanceModel():
 
@@ -45,7 +46,7 @@ def main():
             y_pred = model.predict(X)
 
             # means square error
-            error = float(np.mean((y_pred - y) ** 2))
+            error = calc_rmse(y_pred, y)
 
             print(f"\t\t{s} error = {error}")
 
