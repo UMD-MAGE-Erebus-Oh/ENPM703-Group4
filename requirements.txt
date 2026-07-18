@@ -3,3 +3,4 @@ epiweeks
 optuna
 numpy
 matplotlib
+scikit-learn
