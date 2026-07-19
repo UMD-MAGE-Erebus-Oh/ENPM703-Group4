@@ -4,3 +4,4 @@ optuna
 numpy
 matplotlib
 scikit-learn
+statsmodels
