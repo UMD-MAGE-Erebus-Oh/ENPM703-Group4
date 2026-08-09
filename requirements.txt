@@ -5,3 +5,9 @@ numpy
 matplotlib
 scikit-learn
 statsmodels
+seaborn
+scipy
+torch
+xgboost
+lightgbm
+joblib
